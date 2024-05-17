@@ -1,8 +1,7 @@
-const game = require('../models/game');
+const games = require('../models/game');
 
 const findAllGames = async (req, res, next) => {
-   
-  req.categoriesArray = await game.find({});
+  req.gamesArray = await games.find({}).populate("categories").populate("users");
   next();
 }
 module.exports = findAllGames; 
