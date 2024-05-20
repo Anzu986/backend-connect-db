@@ -29,5 +29,23 @@ const createCategory = async (req, res, next) => {
         res.status(400).send(JSON.stringify({ message: "Ошибка создания категории" }));
   }
 }; 
+const updateCategory = async (req, res, next) => {
+  try {
+      // В метод передаём id из параметров запроса и объект с новыми свойствами
+      req.category = await categories.findByIdAndUpdate(req.params.id, req.body);
+    next();
+  } catch (error) {
+    res.setHeader("Content-Type", "application/json");
+    res.status(400).send(JSON.stringify({ message: "Ошибка обновления категории" }));
+  }
+}; 
 
-module.exports = {findAllCategories, findCategoryById, createCategory};
+const checkEmptyName = async(req, res, next) =>{
+  if (!req.body.name){
+    res.status(400).send({ message: "введите название " })
+  }else{
+    next()
+  }
+}
+
+module.exports = {findAllCategories, findCategoryById, createCategory,updateCategory,checkEmptyName};

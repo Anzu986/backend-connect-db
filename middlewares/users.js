@@ -36,6 +36,22 @@ const findUserById = async (req, res, next) => {
     }
   }; 
 
+  const updateUser = async (req, res, next) => {
+    try {
+        // В метод передаём id из параметров запроса и объект с новыми свойствами
+      req.user = await games.findByIdAndUpdate(req.params.id, req.body);
+      next();
+    } catch (error) {
+      res.setHeader("Content-Type", "application/json");
+      res.status(400).send(JSON.stringify({ message: "Ошибка обновления пользоваткля" }));
+    }
+  }; 
+  const checkEmptyNameAndEmail = async(req, res, next) =>{
+    if (!req.body.username || !req.body.email){
+      res.status(400).send({ message: "введите имя и email " })
+    }else{
+      next()
+    }
+  }
 
-
-module.exports = {findAllUsers, findUserById, createUser};
+module.exports = {findAllUsers, findUserById, createUser,updateUser, checkEmptyNameAndEmail};
