@@ -19,7 +19,7 @@ const findGameById = async (req, res, next) => {
     req.game = await games
       .findById(req.params.id) 
       .populate("categories") 
-      .populate("users"); 
+      .populate("users");
     next(); 
   } catch (error) {
     
@@ -62,5 +62,66 @@ const deleteGame = async (req, res, next) => {
         res.status(400).send(JSON.stringify({ message: "Ошибка удаления игры" }));
   }
 }; 
+const checkEmptyFields = async (req, res, next) => {
+  if (
+    !req.body.title ||
+    !req.body.description ||
+    !req.body.image ||
+    !req.body.link ||
+    !req.body.developer
+  ) {
+ 
+    res.setHeader("Content-Type", "application/json");
+        res.status(400).send(JSON.stringify({ message: "Заполни все поля" }));
+  } else {
+   
+    next();
+  }
+};
 
-module.exports = {findAllGames, findGameById, createGame,updateGame,deleteGame}; 
+
+
+const checkIfCategoriesAvaliable = async (req, res, next) => {
+ 
+if (!req.body.categories || req.body.categories.length === 0) {
+  res.setHeader("Content-Type", "application/json");
+      res.status(400).send(JSON.stringify({ message: "Выбери хотя бы одну категорию" }));
+} else {
+  next();
+}
+};
+
+
+
+const checkIfUsersAreSafe = async (req, res, next) => {
+
+if (!req.body.users) {
+  next();
+  return;
+}
+
+if (req.body.users.length - 1 === req.game.users.length) {
+  next();
+  return;
+} else {
+  res.setHeader("Content-Type", "application/json");
+      res.status(400).send(JSON.stringify({ message: "Нельзя удалять пользователей или добавлять больше одного пользователя" }));
+}
+};
+
+const checkIsGameExists =   async (req, res, next) => {
+
+  const isInArray = req.gamesArray.find((game) => {
+    return req.body.name === game.name;
+  });
+
+  if (isInArray) {
+    res.setHeader("Content-Type", "application/json");
+        res.status(400).send(JSON.stringify({ message: "игры с таким названием уже существует" }));
+  } else {
+
+    next();
+  }
+}; 
+
+module.exports = {findAllGames, findGameById, createGame,updateGame,deleteGame, checkEmptyFields, checkIfCategoriesAvaliable, checkIfUsersAreSafe , checkIsGameExists}; 
