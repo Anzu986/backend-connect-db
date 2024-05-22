@@ -8,7 +8,8 @@ const {cors} = require('./middlewares/cors');
 
 const connectToDatabase = require('./database/connect');
 const apiRouter = require('./routers/apiRouter');
-
+const cookieParser = require("cookie-parser");
+const pagesRouter = require('./routers/pages');
 
   
  const PORT = 3000;
@@ -19,7 +20,9 @@ const apiRouter = require('./routers/apiRouter');
 
   app.use ( 
     cors, 
+    cookieParser(),
     bodyParser.json (),
+    pagesRouter,
     apiRouter,
     express.static(path.join(__dirname,"public")),
    

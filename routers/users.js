@@ -1,4 +1,4 @@
-const { sendUserCreated, sendAllUsers, sendUserById, sendUserUpdated, sendUserDeleted } = require('../controllers/users');
+const { sendUserCreated, sendAllUsers, sendUserById, sendUserUpdated, sendUserDeleted, sendMe } = require('../controllers/users');
 const { checkAuth } = require('../middlewares/auth');
 const { findAllUsers, createUser, findUserById, updateUser, checkEmptyNameAndEmail, deleteUser, checkIsUserExists, checkEmptyNameAndEmailAndPassword, filterPassword, hashPassword } = require('../middlewares/users');
 
